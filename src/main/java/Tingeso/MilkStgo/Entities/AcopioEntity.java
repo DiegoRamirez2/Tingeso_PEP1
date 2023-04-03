@@ -3,7 +3,6 @@ package Tingeso.MilkStgo.Entities;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Generated;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
@@ -17,7 +16,8 @@ public class AcopioEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_acopio", unique = true, nullable = false)
     private Long id_acopio;
-    private LocalDate fecha;
+    private String proveedor;
+    private String fecha;
     private String turno;
     private Integer kls_leche;
 

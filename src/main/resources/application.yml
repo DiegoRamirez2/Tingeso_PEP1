@@ -1,0 +1,17 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: MilkStgoPep1
+  jpa:
+    show-sql: true
+    hibernate:
+      dialect: PostgreSQL9Dialect
+      ddl-auto: create-drop
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    dbname: PEP1
+    url: jdbc:postgresql://localhost:5432/PEP1
+    username: postgres
+    password: 1234
