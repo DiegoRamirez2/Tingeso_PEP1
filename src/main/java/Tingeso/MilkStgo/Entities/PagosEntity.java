@@ -11,6 +11,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PagosEntity {
+    private static float MANANA_TARDE = 1.2F;
+    private static float MANANA = 1.12F;
+    private static float TARDE = 1.08F;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_pago", unique = true, nullable = false)
