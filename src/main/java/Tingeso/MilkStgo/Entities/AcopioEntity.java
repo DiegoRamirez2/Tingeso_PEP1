@@ -17,7 +17,7 @@ public class AcopioEntity {
     @Column(name = "id_acopio", unique = true, nullable = false)
     private Long id_acopio;
     private String proveedor;
-    private String fecha;
+    private LocalDate fecha;
     private String turno;
     private Integer kls_leche;
 

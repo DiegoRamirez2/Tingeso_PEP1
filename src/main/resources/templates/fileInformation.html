@@ -122,11 +122,11 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="data:${datas}">
-      <td th:text="${#dates.format(data.fecha, 'yyyy/MM/dd')}"></td>
-      <td th:text="${data.turno}"></td>
-      <td th:text="${data.proveedor}"></td>
-      <td th:text="${data.kls_leche}"></td>
+    <tr th:each="datas:${datas}">
+      <td th:text="${#temporals.format(datas.fecha, 'yyyy/MM/dd')}"></td>
+      <td th:text="${datas.turno}"></td>
+      <td th:text="${datas.proveedor}"></td>
+      <td th:text="${datas.kls_leche}"></td>
     </tr>
     </tbody>
   </table>

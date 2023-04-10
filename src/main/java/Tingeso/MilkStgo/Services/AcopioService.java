@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 @Service
@@ -84,7 +85,7 @@ public class AcopioService {
     }
     public void guardarDataDB(String fecha, String turno, String proveedor, String kls_leche){
         AcopioEntity data = new AcopioEntity();
-        data.setFecha(fecha);
+        data.setFecha(LocalDate.parse(fecha, DateTimeFormatter.ofPattern("yyyy/MM/dd")));
         data.setTurno(turno);
         data.setProveedor(proveedor);
         data.setKls_leche(Integer.parseInt(kls_leche));

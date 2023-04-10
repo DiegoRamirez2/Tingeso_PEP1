@@ -20,5 +20,4 @@ public class LaboratorioEntity {
     private float porcentaje_grasa;
     private float porcentaje_solidos_totales;
     private LocalDate fecha_estudio;
-
 }
