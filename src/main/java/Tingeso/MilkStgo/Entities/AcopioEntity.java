@@ -20,5 +20,4 @@ public class AcopioEntity {
     private LocalDate fecha;
     private String turno;
     private Integer kls_leche;
-
 }

@@ -60,15 +60,12 @@ public class AcopioService {
             String temp = "";
             String bfRead;
             int count = 1;
+            bf.readLine();
             while((bfRead = bf.readLine()) != null){
-                if (count == 1){
-                    count = 0;
+                // System.out.println(bfRead);
+                guardarDataDB(bfRead.split(";")[0], bfRead.split(";")[1], bfRead.split(";")[2], bfRead.split(";")[3]);
+                temp = temp + "\n" + bfRead;
                 }
-                else{
-                    guardarDataDB(bfRead.split(";")[0], bfRead.split(";")[1], bfRead.split(";")[2], bfRead.split(";")[3]);
-                    temp = temp + "\n" + bfRead;
-                }
-            }
             texto = temp;
             System.out.println("Archivo leido exitosamente");
         }catch(Exception e){
@@ -85,15 +82,26 @@ public class AcopioService {
     }
     public void guardarDataDB(String fecha, String turno, String proveedor, String kls_leche){
         AcopioEntity data = new AcopioEntity();
-        data.setFecha(LocalDate.parse(fecha, DateTimeFormatter.ofPattern("yyyy/MM/dd")));
+        data.setFecha(LocalDate.parse(fecha, DateTimeFormatter.ofPattern("dd-MM-yyyy")));
         data.setTurno(turno);
         data.setProveedor(proveedor);
         data.setKls_leche(Integer.parseInt(kls_leche));
         guardarData(data);
     }
-
     public void guardarData(AcopioEntity data){
         AcopioRepository.save(data);
     }
+    public Integer countAcopioByFecha(LocalDate fecha, String turno, String proveedor){
+        return AcopioRepository.findAcopioByFecha(fecha, turno, proveedor).size();
+    }
+    public Integer CountDaysAcopioByProveedor(String proveedor, LocalDate fecha){
+        return AcopioRepository.CountDaysAcopioByProveedor(proveedor, fecha);
+    }
+    public Integer LecheByProveedor(String proveedor, LocalDate fecha){
+        return AcopioRepository.LecheByProveedor(proveedor, fecha);
+    }
 
+    public ArrayList<String> getProveedores() {
+        return AcopioRepository.getProveedores();
+    }
 }

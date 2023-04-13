@@ -8,11 +8,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ProveedorRepository extends JpaRepository<ProveedorEntity, Long> {
-    @Query("select e from ProveedorEntity e where e.id_proveedor = :id_proveedor")
+    @Query("select p from ProveedorEntity p where p.id_proveedor = :id_proveedor")
     ProveedorEntity findByIdProveedor(@Param("id_proveedor") Long id_proveedor);
-    @Query("select e from ProveedorEntity e where e.categoria = :categoria")
+    @Query("select p from ProveedorEntity p where p.categoria = :categoria")
     ProveedorEntity findByCategoria(@Param("categoria") String categoria);
-    @Query("select e from ProveedorEntity e where e.retencion = :retencion")
+    @Query("select p from ProveedorEntity p where p.retencion = :retencion")
     ProveedorEntity findByRetencion(@Param("retencion") String retencion);
-
 }
