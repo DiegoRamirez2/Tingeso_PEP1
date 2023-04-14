@@ -27,26 +27,35 @@ public class LaboratorioService {
     private ProveedorService proveedorService;
     private final Logger logg = LoggerFactory.getLogger(LaboratorioService.class);
 
-    public Integer GrasaByProveedor(String id_proveedor) {
-        return laboratorioRepository.findByProveedorId(Long.parseLong(id_proveedor)).getPorcentaje_grasa().intValue();
+    public Integer porcentajeGrasaByProveedor(Long id_proveedor) {
+        return laboratorioRepository.findByProveedorId(id_proveedor).getPorcentaje_grasa().intValue();
     }
-    public Integer SolidosByProveedor(String id_proveedor) {
-        return laboratorioRepository.findByProveedorId(Long.parseLong(id_proveedor)).getPorcentaje_solidos_totales().intValue();
+    public Integer porcentajeSolidosByProveedor(Long id_proveedor) {
+        return laboratorioRepository.findByProveedorId(id_proveedor).getPorcentaje_solidos_totales().intValue();
     }
-    public String getRetencionByProveedor(String idProveedor) {
-        return laboratorioRepository.findRetencionByProveedorId(Long.parseLong(idProveedor)).getRetencion();
+    public String getRetencionByProveedor(Long id_proveedor) {
+        return laboratorioRepository.findRetencionByProveedorId(id_proveedor).getRetencion();
     }
-    public String getNombreByProveedor(String idProveedor) {
-        return laboratorioRepository.findRetencionByProveedorId(Long.parseLong(idProveedor)).getNombre();
+    public String getNombreByProveedor(Long id_proveedor) {
+        return laboratorioRepository.findRetencionByProveedorId(id_proveedor).getNombre();
     }
-    public String getCategoriaByProveedor(String idProveedor) {
-        return laboratorioRepository.findRetencionByProveedorId(Long.parseLong(idProveedor)).getCategoria();
+    public String getCategoriaByProveedor(Long id_proveedor) {
+        return laboratorioRepository.findRetencionByProveedorId(id_proveedor).getCategoria();
     }
-    public ArrayList<LaboratorioEntity> ObtenerData(){
+    public ArrayList<LaboratorioEntity> obtenerData(){
         return (ArrayList<LaboratorioEntity>) laboratorioRepository.findAll();
     }
+    public LaboratorioEntity getLaboratorioByProveedor(Long id_proveedor){
+        return laboratorioRepository.findByProveedorId(id_proveedor);
+    }
+    public void guardarData(LaboratorioEntity laboratorioEntity){
+        laboratorioRepository.save(laboratorioEntity);
+    }
+    public void eliminarData(LaboratorioEntity laboratorio) {
+        laboratorioRepository.delete(laboratorio);
+    }
     @Generated
-    public String Guardar(MultipartFile file){
+    public void guardar(MultipartFile file){
         String filename = file.getOriginalFilename();
         if(filename != null){
             if(!file.isEmpty()){
@@ -60,15 +69,10 @@ public class LaboratorioService {
                     logg.error("ERROR", e);
                 }
             }
-            return "Archivo guardado con exito!";
-        }
-        else{
-            return "No se pudo guardar el archivo";
         }
     }
     @Generated
-    public String leerCsv(String direccion){
-        String texto = "";
+    public void leerCsv(String direccion){
         String proveedores = "";
         BufferedReader bf = null;
         laboratorioRepository.deleteAll();
@@ -76,22 +80,20 @@ public class LaboratorioService {
             bf = new BufferedReader(new FileReader(direccion));
             String temp = "";
             String bfRead;
-            int count = 1;
             bf.readLine();
             while((bfRead = bf.readLine()) != null){
                 String id_proveedor = bfRead.split(";")[0];
                 String grasa = bfRead.split(";")[1];
                 String solidos = bfRead.split(";")[2];
-                ProveedorEntity find_proveedor = proveedorService.findByCodigo(id_proveedor);
+                ProveedorEntity find_proveedor = proveedorService.findByCodigo(Long.valueOf(id_proveedor));
                 if(find_proveedor != null) {
-                    guardarData(find_proveedor, grasa,solidos);
+                    guardarDataDB(find_proveedor, grasa,solidos);
                 }
                 else {
                     proveedores = proveedores  + id_proveedor + " - ";
                 }
                 temp = temp + "\n" + bfRead;
             }
-            texto = temp;
             System.out.println("Archivo leido exitosamente");
         }catch(Exception e){
             System.err.println("No se encontro el archivo");
@@ -104,22 +106,12 @@ public class LaboratorioService {
                 }
             }
         }
-        if(proveedores.equals("")){
-            return "Se leyo exitosamente el archivo";
-        }
-        else{
-            return "El archivo se leyo exitosamente, pero no se pudo agregar los siguientes Proveedores: \n" + proveedores;
-        }
     }
-    public void guardarData(ProveedorEntity proveedor, String grasa, String solido){
+    public void guardarDataDB(ProveedorEntity proveedor, String grasa, String solido){
         LaboratorioEntity data = new LaboratorioEntity();
-        try{
-            data.setProveedor(proveedor);
-            data.setPorcentaje_grasa(Double.valueOf(grasa));
-            data.setPorcentaje_solidos_totales(Double.valueOf(solido));
-        } catch (Exception e){
-            System.err.println("Error al guardar los datos");
-        }
+        data.setProveedor(proveedor);
+        data.setPorcentaje_grasa(Double.valueOf(grasa));
+        data.setPorcentaje_solidos_totales(Double.valueOf(solido));
         laboratorioRepository.save(data);
     }
 }

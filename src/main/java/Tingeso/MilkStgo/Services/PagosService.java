@@ -55,8 +55,8 @@ public class PagosService {
         }
     }
     public Double Bonificacion(String id_proveedor, Integer pago_leche, LocalDate fecha){
-        Integer M = acopioService.countAcopioByFecha(fecha, "M", id_proveedor);
-        Integer T = acopioService.countAcopioByFecha(fecha, "T", id_proveedor);
+        Integer M = acopioService.countAcopioSinceFecha(fecha, "M", id_proveedor);
+        Integer T = acopioService.countAcopioSinceFecha(fecha, "T", id_proveedor);
         if(M >= 10 && T >= 10){
             return pago_leche * 0.2;
         }
@@ -73,19 +73,15 @@ public class PagosService {
     public Double dctoPagoLeche(Double variacion, Integer pago_leche){
         double dcto = 0.0;
         if(variacion > 0 && variacion <= 8){
-            System.out.println("Entramos a dctoLeche 0");
             dcto = pago_leche * 0.0;
         }
         else if(variacion > 8 && variacion <= 25){
-            System.out.println("Entramos a dctoLeche 1");
             dcto = pago_leche * 0.07;
         }
         else if(variacion > 25 && variacion <= 45){
-            System.out.println("Entramos a dctoLeche 2");
             dcto = pago_leche * 0.15;
         }
         else if(variacion > 45){
-            System.out.println("Entramos a dctoLeche 3");
             dcto = pago_leche * 0.3;
         }
         dcto = Math.round(dcto * 100.0) / 100.0;
@@ -94,19 +90,15 @@ public class PagosService {
     public Double dctoPagoGrasa(Double variacion, Integer pagoLeche) {
         double dcto = 0.0;
         if (variacion > 0 && variacion <= 15) {
-            System.out.println("Entramos a dctoGrasa 0");
             dcto = 0.0 * pagoLeche;
         }
         if (variacion >= 16 && variacion <= 25) {
-            System.out.println("Entramos a dctoGrasa 1");
             dcto = 0.12 * pagoLeche;
         }
         if (variacion >= 26 && variacion <= 40) {
-            System.out.println("Entramos a dctoGrasa 2");
             dcto = 0.20 * pagoLeche;
         }
         if (variacion >= 41) {
-            System.out.println("Entramos a dctoGrasa 3");
             dcto = 0.3 * pagoLeche;
         }
         dcto = Math.round(dcto * 100.0) / 100.0;
@@ -115,19 +107,15 @@ public class PagosService {
     public Double dctoPagoSolidos(Double variacion, Integer pagoLeche) {
         double dcto = 0.0;
         if (variacion > 0 && variacion <= 6) {
-            System.out.println("Entramos a dctoSolidos 0");
             dcto = 0.0 * pagoLeche;
         }
         if (variacion >= 7 && variacion <= 12) {
-            System.out.println("Entramos a dctoSolidos 1");
             dcto = 0.18 * pagoLeche;
         }
         if (variacion >= 13 && variacion <= 35) {
-            System.out.println("Entramos a dctoSolidos 2");
             dcto = 0.27 * pagoLeche;
         }
         if (variacion >= 36) {
-            System.out.println("Entramos a dctoSolidos 3");
             dcto = 0.45 * pagoLeche;
         }
         dcto = Math.round(dcto * 100.0) / 100.0;
@@ -194,14 +182,14 @@ public class PagosService {
         pago.setMes(Integer.parseInt(quincena.split("/")[1]));
         pago.setQuincena(Integer.parseInt(quincena.split("/")[2]));
         pago.setId_proveedor(id_proveedor);
-        pago.setNombre_proveedor(laboratorioService.getNombreByProveedor(id_proveedor));
-        pago.setKls_leche(acopioService.LecheByProveedor(id_proveedor, fechaBase));
-        pago.setGrasa(laboratorioService.GrasaByProveedor(id_proveedor));
-        pago.setSolidos_totales(laboratorioService.SolidosByProveedor(id_proveedor));
+        pago.setNombre_proveedor(laboratorioService.getNombreByProveedor(Long.valueOf(id_proveedor)));
+        pago.setKls_leche(acopioService.lecheByProveedor(id_proveedor, fechaBase));
+        pago.setGrasa(laboratorioService.porcentajeGrasaByProveedor(Long.valueOf(id_proveedor)));
+        pago.setSolidos_totales(laboratorioService.porcentajeSolidosByProveedor(Long.valueOf(id_proveedor)));
         // Se hace Set de los datos que se calculan
-        pago.setNro_dias_envios(acopioService.CountDaysAcopioByProveedor(id_proveedor, fechaBase));
+        pago.setNro_dias_envios(acopioService.countDaysAcopioByProveedor(id_proveedor, fechaBase));
         pago.setProm_diario_kls_leche((double) (pago.getKls_leche() / pago.getNro_dias_envios()));
-        pago.setPago_leche(pagoLeche(laboratorioService.getCategoriaByProveedor(id_proveedor), pago.getKls_leche()));
+        pago.setPago_leche(pagoLeche(laboratorioService.getCategoriaByProveedor(Long.valueOf(id_proveedor)), pago.getKls_leche()));
         pago.setPago_grasa(pagoGrasa(pago.getGrasa(), pago.getKls_leche()));
         pago.setPago_solidos_totales(pagoSolidos(pago.getSolidos_totales(), pago.getKls_leche()));
         // Se busca si es que hay un pago anterior para calcular las variaciones
@@ -232,7 +220,7 @@ public class PagosService {
         Double PagoTotal = PagoAcopioLeche - Descuentos;
         pago.setPago_total(PagoTotal);
         // Se calcula y se hace set de la retencion
-        Double Retencion = CalcularRetencion(laboratorioService.getRetencionByProveedor(id_proveedor), PagoTotal);
+        Double Retencion = CalcularRetencion(laboratorioService.getRetencionByProveedor(Long.valueOf(id_proveedor)), PagoTotal);
         pago.setMonto_retencion(Retencion);
         // Se calcula y se hace set del pago final
         Double PagoFinal = PagoTotal - Retencion;

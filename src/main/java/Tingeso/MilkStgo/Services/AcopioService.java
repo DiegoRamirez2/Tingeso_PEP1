@@ -29,7 +29,7 @@ public class AcopioService {
     }
 
     @Generated
-    public String Guardar(MultipartFile file){
+    public String guardar(MultipartFile file){
         String filename = file.getOriginalFilename();
         if(filename != null){
             if(!file.isEmpty()){
@@ -52,21 +52,18 @@ public class AcopioService {
 
     @Generated
     public void leerCsv(String direccion){
-        String texto = "";
         BufferedReader bf = null;
         AcopioRepository.deleteAll();
         try{
             bf = new BufferedReader(new FileReader(direccion));
             String temp = "";
             String bfRead;
-            int count = 1;
             bf.readLine();
             while((bfRead = bf.readLine()) != null){
                 // System.out.println(bfRead);
                 guardarDataDB(bfRead.split(";")[0], bfRead.split(";")[1], bfRead.split(";")[2], bfRead.split(";")[3]);
                 temp = temp + "\n" + bfRead;
                 }
-            texto = temp;
             System.out.println("Archivo leido exitosamente");
         }catch(Exception e){
             System.err.println("No se encontro el archivo");
@@ -88,20 +85,23 @@ public class AcopioService {
         data.setKls_leche(Integer.parseInt(kls_leche));
         guardarData(data);
     }
-    public void guardarData(AcopioEntity data){
-        AcopioRepository.save(data);
+    public void guardarData(AcopioEntity acopio){
+        AcopioRepository.save(acopio);
     }
-    public Integer countAcopioByFecha(LocalDate fecha, String turno, String proveedor){
-        return AcopioRepository.findAcopioByFecha(fecha, turno, proveedor).size();
+    public void eliminarData(AcopioEntity acopio){
+        AcopioRepository.delete(acopio);
     }
-    public Integer CountDaysAcopioByProveedor(String proveedor, LocalDate fecha){
+    public Integer countAcopioSinceFecha(LocalDate fecha, String turno, String proveedor){
+        return AcopioRepository.findAcopioSinceFecha(fecha, turno, proveedor).size();
+    }
+    public Integer countDaysAcopioByProveedor(String proveedor, LocalDate fecha){
         return AcopioRepository.CountDaysAcopioByProveedor(proveedor, fecha);
     }
-    public Integer LecheByProveedor(String proveedor, LocalDate fecha){
+    public Integer lecheByProveedor(String proveedor, LocalDate fecha){
         return AcopioRepository.LecheByProveedor(proveedor, fecha);
     }
-
-    public ArrayList<String> getProveedores() {
-        return AcopioRepository.getProveedores();
+    public ArrayList<String> getProveedores() {return AcopioRepository.getProveedores();}
+    public AcopioEntity getAcopioByFechaTurnoProveedor(LocalDate fecha, String turno, String proveedor){
+        return AcopioRepository.findAcopioByFechaTurnoProveedor(fecha, turno, proveedor);
     }
 }

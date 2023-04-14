@@ -25,7 +25,7 @@ public class LaboratorioController {
 
     @PostMapping("/LaboratorioUpload")
     public String upload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
-        laboratorioService.Guardar(file);
+        laboratorioService.guardar(file);
         redirectAttributes.addFlashAttribute("mensaje", "¡Archivo cargado correctamente!");
         laboratorioService.leerCsv(file.getOriginalFilename());
         return "redirect:/LaboratorioUpload";
@@ -33,7 +33,7 @@ public class LaboratorioController {
 
     @GetMapping("/LaboratorioInformation")
     public String listar(Model model) {
-        ArrayList<LaboratorioEntity> laboratorio = laboratorioService.ObtenerData();
+        ArrayList<LaboratorioEntity> laboratorio = laboratorioService.obtenerData();
         model.addAttribute("lab", laboratorio);
         return "LaboratorioInformation";
     }

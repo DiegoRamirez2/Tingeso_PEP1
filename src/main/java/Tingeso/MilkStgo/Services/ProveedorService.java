@@ -13,7 +13,7 @@ public class ProveedorService {
     @Autowired
     ProveedorRepository proveedorRepository;
 
-    public void guardarProveedor(Long id_proveedor, String nombre, String categoria, String retencion){
+    public void guardarProveedor(Long id_proveedor, String nombre, String categoria, String retencion) {
         ProveedorEntity proveedor = new ProveedorEntity();
         proveedor.setId_proveedor(id_proveedor);
         proveedor.setNombre(nombre);
@@ -21,15 +21,19 @@ public class ProveedorService {
         proveedor.setRetencion(retencion);
         proveedorRepository.save(proveedor);
     }
-    public ArrayList<ProveedorEntity> obtenerProveedores(){
+    public ArrayList<ProveedorEntity> obtenerProveedores() {
         return (ArrayList<ProveedorEntity>) proveedorRepository.findAll();
-
     }
-
-    public ProveedorEntity findByCodigo(String id_proveedor) {
-        ProveedorEntity proveedor = proveedorRepository.findByIdProveedor(Long.parseLong(id_proveedor));
-        if(proveedor == null)
-            System.out.println("No se encontro el proveedor");
-        return proveedor;
+    public void guardarData(ProveedorEntity proveedor) {
+        proveedorRepository.save(proveedor);
+    }
+    public void eliminarData(ProveedorEntity proveedor) {
+        proveedorRepository.delete(proveedor);
+    }
+    public ProveedorEntity findByCodigo(Long id_proveedor) {
+        return proveedorRepository.findByIdProveedor(id_proveedor);
+    }
+    public void eliminarTodo() {
+        proveedorRepository.deleteAll();
     }
 }
