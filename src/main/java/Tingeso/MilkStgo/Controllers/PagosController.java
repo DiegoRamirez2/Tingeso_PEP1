@@ -18,7 +18,7 @@ public class PagosController {
 
     @GetMapping("/pagos")
     public String pagos(Model model) {
-        ArrayList<PagosEntity> pagos = pagosService.ObtenerData();
+        ArrayList<PagosEntity> pagos = pagosService.obtenerData();
         model.addAttribute("pagos", pagos);
         return "pagos";
     }

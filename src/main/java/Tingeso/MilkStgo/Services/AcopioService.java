@@ -55,12 +55,10 @@ public class AcopioService {
         BufferedReader bf = null;
         AcopioRepository.deleteAll();
         try{
-            bf = new BufferedReader(new FileReader(direccion));
             String temp = "";
             String bfRead;
-            bf.readLine();
+            bf = new BufferedReader(new FileReader(direccion));
             while((bfRead = bf.readLine()) != null){
-                // System.out.println(bfRead);
                 guardarDataDB(bfRead.split(";")[0], bfRead.split(";")[1], bfRead.split(";")[2], bfRead.split(";")[3]);
                 temp = temp + "\n" + bfRead;
                 }
@@ -78,12 +76,15 @@ public class AcopioService {
         }
     }
     public void guardarDataDB(String fecha, String turno, String proveedor, String kls_leche){
-        AcopioEntity data = new AcopioEntity();
-        data.setFecha(LocalDate.parse(fecha, DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-        data.setTurno(turno);
-        data.setProveedor(proveedor);
-        data.setKls_leche(Integer.parseInt(kls_leche));
-        guardarData(data);
+        LocalDate date = LocalDate.parse(fecha, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        if(getAcopioByFechaTurnoProveedor(date, turno, proveedor) == null){
+            AcopioEntity data = new AcopioEntity();
+            data.setFecha(LocalDate.parse(fecha, DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            data.setTurno(turno);
+            data.setProveedor(proveedor);
+            data.setKls_leche(Integer.parseInt(kls_leche));
+            guardarData(data);
+        }
     }
     public void guardarData(AcopioEntity acopio){
         AcopioRepository.save(acopio);

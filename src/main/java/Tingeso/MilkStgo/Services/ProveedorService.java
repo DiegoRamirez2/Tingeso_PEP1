@@ -36,4 +36,8 @@ public class ProveedorService {
     public void eliminarTodo() {
         proveedorRepository.deleteAll();
     }
+
+    public ProveedorEntity getProveedorById(String idProveedor) {
+        return proveedorRepository.findByIdProveedor(Long.parseLong(idProveedor));
+    }
 }

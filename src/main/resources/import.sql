@@ -1,24 +1,5 @@
 INSERT INTO proveedor(id_proveedor, nombre, categoria, retencion) VALUES (1003, 'QUISPE S. ALCIDES', 'A', 'Si');
 INSERT INTO proveedor(id_proveedor, nombre, categoria, retencion) VALUES (1011, 'BELLO R. PHILIP', 'B', 'Si');
 INSERT INTO proveedor(id_proveedor, nombre, categoria, retencion) VALUES (1025, 'ROMAN A. PABLO', 'C', 'No');
-INSERT INTO proveedor(id_proveedor, nombre, categoria, retencion) VALUES (1078, 'JUAN SANTOS', 'A', 'Si');
-INSERT INTO proveedor(id_proveedor, nombre, categoria, retencion) VALUES (020202, 'ANA RODRIGUEZ', 'B', 'No');
-INSERT INTO proveedor(id_proveedor, nombre, categoria, retencion) VALUES (030303, 'PEDRO MARTINEZ', 'C', 'No');
-INSERT INTO proveedor(id_proveedor, nombre, categoria, retencion) VALUES (040404, 'MARIA PEREZ', 'D', 'Si');
-INSERT INTO proveedor(id_proveedor, nombre, categoria, retencion) VALUES (050505, 'LUCAS GARCIA', 'A', 'No');
-INSERT INTO proveedor(id_proveedor, nombre, categoria, retencion) VALUES (060606, 'CARLA FERNANDEZ', 'B', 'Si');
-INSERT INTO proveedor(id_proveedor, nombre, categoria, retencion) VALUES (070707, 'MARTIN SANCHEZ', 'C', 'Si');
-INSERT INTO proveedor(id_proveedor, nombre, categoria, retencion) VALUES (080808, 'SOLEDAD LOPEZ', 'D', 'No');
-INSERT INTO proveedor(id_proveedor, nombre, categoria, retencion) VALUES (090909, 'JULIAN RAMIREZ', 'A', 'Si');
-INSERT INTO proveedor(id_proveedor, nombre, categoria, retencion) VALUES (100100, 'DANIELA GOMEZ', 'B', 'No');
-INSERT INTO proveedor(id_proveedor, nombre, categoria, retencion) VALUES (110110, 'JUAN PEREZ', 'A', 'No');
-INSERT INTO proveedor(id_proveedor, nombre, categoria, retencion) VALUES (120120, 'MARIA GUTIERREZ', 'B', 'Si');
-INSERT INTO proveedor(id_proveedor, nombre, categoria, retencion) VALUES (130130, 'PEDRO RUIZ', 'C', 'Si');
-INSERT INTO proveedor(id_proveedor, nombre, categoria, retencion) VALUES (140140, 'ANA FLORES', 'D', 'No');
-INSERT INTO proveedor(id_proveedor, nombre, categoria, retencion) VALUES (150150, 'JAVIER GARCIA', 'A', 'Si');
-INSERT INTO proveedor(id_proveedor, nombre, categoria, retencion) VALUES (160160, 'CLAUDIA RAMIREZ', 'B', 'No');
-INSERT INTO proveedor(id_proveedor, nombre, categoria, retencion) VALUES (170170, 'MARTIN LOPEZ', 'C', 'No');
-INSERT INTO proveedor(id_proveedor, nombre, categoria, retencion) VALUES (180180, 'FABIAN SANCHEZ', 'D', 'Si');
-INSERT INTO proveedor(id_proveedor, nombre, categoria, retencion) VALUES (190190, 'SOFIA RODRIGUEZ', 'A', 'No');
-INSERT INTO proveedor(id_proveedor, nombre, categoria, retencion) VALUES (200200, 'PABLO MARTINEZ', 'B', 'Si');
+INSERT INTO proveedor(id_proveedor, nombre, categoria, retencion) VALUES (1028, 'MARTINEZ A. JUAN', 'A', 'Si');
 

@@ -16,7 +16,8 @@ public class PagosService {
     private LaboratorioService laboratorioService;
     @Autowired
     private AcopioService acopioService;
-
+    @Autowired
+    private ProveedorService proveedorService;
     public Integer pagoLeche(String categoria, Integer kls_leche){
         return switch (categoria) {
             case "A" -> kls_leche * 700;
@@ -41,63 +42,47 @@ public class PagosService {
         if(solidos <= 7){
             return kls_leche * -130;
         }
-        else if(solidos > 8 && solidos <= 18){
+        else if(solidos <= 18){
             return kls_leche * -90;
         }
-        else if(solidos > 18 && solidos <= 35) {
+        else if(solidos <= 35) {
             return kls_leche * 95;
         }
-        else if(solidos > 36) {
-            return kls_leche * 150;
-        }
-        else{
-            return 0;
-        }
+        return kls_leche * 150;
     }
     public Double Bonificacion(String id_proveedor, Integer pago_leche, LocalDate fecha){
         Integer M = acopioService.countAcopioSinceFecha(fecha, "M", id_proveedor);
         Integer T = acopioService.countAcopioSinceFecha(fecha, "T", id_proveedor);
         if(M >= 10 && T >= 10){
-            return pago_leche * 0.2;
-        }
+            return pago_leche * 0.2;}
         else if(M >= 10){
-            return pago_leche * 0.12;
-        }
+            return pago_leche * 0.12;}
         else if(T >= 10){
-            return pago_leche * 0.08;
-        }
+            return pago_leche * 0.08;}
         else{
-            return 0.0;
-        }
+            return 0.0;}
     }
-    public Double dctoPagoLeche(Double variacion, Integer pago_leche){
+    public Double dctoPagoLeche(Double variacion, Integer pago_leche) {
         double dcto = 0.0;
         if(variacion > 0 && variacion <= 8){
-            dcto = pago_leche * 0.0;
-        }
+            dcto = pago_leche * 0.0;}
         else if(variacion > 8 && variacion <= 25){
-            dcto = pago_leche * 0.07;
-        }
+            dcto = pago_leche * 0.07;}
         else if(variacion > 25 && variacion <= 45){
-            dcto = pago_leche * 0.15;
-        }
+            dcto = pago_leche * 0.15;}
         else if(variacion > 45){
-            dcto = pago_leche * 0.3;
-        }
+            dcto = pago_leche * 0.3;}
         dcto = Math.round(dcto * 100.0) / 100.0;
         return dcto;
     }
     public Double dctoPagoGrasa(Double variacion, Integer pagoLeche) {
         double dcto = 0.0;
         if (variacion > 0 && variacion <= 15) {
-            dcto = 0.0 * pagoLeche;
-        }
+            dcto = 0.0 * pagoLeche;}
         if (variacion >= 16 && variacion <= 25) {
-            dcto = 0.12 * pagoLeche;
-        }
+            dcto = 0.12 * pagoLeche;}
         if (variacion >= 26 && variacion <= 40) {
-            dcto = 0.20 * pagoLeche;
-        }
+            dcto = 0.20 * pagoLeche;}
         if (variacion >= 41) {
             dcto = 0.3 * pagoLeche;
         }
@@ -107,25 +92,20 @@ public class PagosService {
     public Double dctoPagoSolidos(Double variacion, Integer pagoLeche) {
         double dcto = 0.0;
         if (variacion > 0 && variacion <= 6) {
-            dcto = 0.0 * pagoLeche;
-        }
+            dcto = 0.0 * pagoLeche;}
         if (variacion >= 7 && variacion <= 12) {
-            dcto = 0.18 * pagoLeche;
-        }
+            dcto = 0.18 * pagoLeche;}
         if (variacion >= 13 && variacion <= 35) {
-            dcto = 0.27 * pagoLeche;
-        }
+            dcto = 0.27 * pagoLeche;}
         if (variacion >= 36) {
-            dcto = 0.45 * pagoLeche;
-        }
+            dcto = 0.45 * pagoLeche;}
         dcto = Math.round(dcto * 100.0) / 100.0;
         return dcto;
     }
-    public Double CalcularRetencion(String retencion, Double pagototal) {
+    public Double calcularRetencion(String retencion, Double pagototal) {
         double MontoRetencion = 0.0;
         if (retencion.equals("Si") && pagototal > 950000.0) {
-            MontoRetencion = pagototal * 0.13;
-        }
+            MontoRetencion = pagototal * 0.13;}
         MontoRetencion = Math.round(MontoRetencion * 100.0) / 100.0;
         return MontoRetencion;
     }
@@ -134,16 +114,11 @@ public class PagosService {
         variacion = Math.round(variacion * 100.0) / 100.0;
         return variacion;
     }
-    public Double variacionPlana(Integer valorAntiguo, Integer valorNuevo) {
-        return valorAntiguo - valorNuevo.doubleValue();
-    }
-    public String getQuincena(){
-        LocalDate fecha = LocalDate.now();
+    public String getQuincena(LocalDate fecha){
         int dia = fecha.getDayOfMonth();
         if(dia <= 15){
             return fecha.getYear() + "/" + fecha.getMonthValue() + "/1";
-        }
-        else{
+        }else{
             return fecha.getYear() + "/" + fecha.getMonthValue() + "/2";
         }
     }
@@ -164,77 +139,111 @@ public class PagosService {
         }
         return pagosRepository.findPagosByQuincena(id_proveedor, anio, mes, quincenaAnterior);
     }
-    public void calcularPago(String id_proveedor){
-        PagosEntity pago = new PagosEntity();
-        String quincena = getQuincena();
-        LocalDate fechaBase;
-        // Dependiendo de la quincena, se determina si se empieza a buscar desde el 1 o desde el 16
-        if(quincena.split("/")[2].equals("1")){
-            fechaBase = LocalDate.of(Integer.parseInt(quincena.split("/")[0]),
-                    Integer.parseInt(quincena.split("/")[1]), 1);
+    public void calcularPago(String id_proveedor, LocalDate fecha){
+        Integer anio = Integer.parseInt(getQuincena(fecha).split("/")[0]);
+        Integer mes = Integer.parseInt(getQuincena(fecha).split("/")[1]);
+        Integer quincena1 = Integer.parseInt(getQuincena(fecha).split("/")[2]);
+        if(!existePago(id_proveedor, anio, mes, quincena1)){
+            PagosEntity pago = new PagosEntity();
+            String quincena = getQuincena(fecha);
+            LocalDate fechaBase;
+            // Dependiendo de la quincena, se determina si se empieza a buscar desde el 1 o desde el 16
+            if(quincena.split("/")[2].equals("1")){
+                fechaBase = LocalDate.of(Integer.parseInt(quincena.split("/")[0]), Integer.parseInt(quincena.split("/")[1]), 1);
+            } else{
+                fechaBase = LocalDate.of(Integer.parseInt(quincena.split("/")[0]), Integer.parseInt(quincena.split("/")[1]), 16);
+            }
+            // Se hace Set de los datos que no se calculan
+            pago.setAnio(Integer.parseInt(quincena.split("/")[0]));
+            pago.setMes(Integer.parseInt(quincena.split("/")[1]));
+            pago.setQuincena(Integer.parseInt(quincena.split("/")[2]));
+            pago.setId_proveedor(id_proveedor);
+            pago.setNombre_proveedor(proveedorService.getProveedorById(id_proveedor).getNombre());
+            if(acopioService.lecheByProveedor(id_proveedor, fechaBase) != null
+                    && laboratorioService.porcentajeGrasaByProveedor(Long.valueOf(id_proveedor)) != null
+                    && laboratorioService.porcentajeSolidosByProveedor(Long.valueOf(id_proveedor)) != null){
+                pago.setKls_leche(acopioService.lecheByProveedor(id_proveedor, fechaBase));
+                pago.setGrasa(laboratorioService.porcentajeGrasaByProveedor(Long.valueOf(id_proveedor)));
+                pago.setSolidos_totales(laboratorioService.porcentajeSolidosByProveedor(Long.valueOf(id_proveedor)));
+                // Se hace Set de los datos que se calculan
+                pago.setNro_dias_envios(acopioService.countDaysAcopioByProveedor(id_proveedor, fechaBase));
+                pago.setProm_diario_kls_leche((double) (pago.getKls_leche() / pago.getNro_dias_envios()));
+                pago.setPago_leche(pagoLeche(laboratorioService.getCategoriaByProveedor(Long.valueOf(id_proveedor)), pago.getKls_leche()));
+                pago.setPago_grasa(pagoGrasa(pago.getGrasa(), pago.getKls_leche()));
+                pago.setPago_solidos_totales(pagoSolidos(pago.getSolidos_totales(), pago.getKls_leche()));
+                // Se busca si es que hay un pago anterior para calcular las variaciones
+                PagosEntity pagoAnterior = getPagoAnterior(id_proveedor, quincena);
+                // Si hay un pago anterior, se calculan las variaciones
+                if(pagoAnterior != null){
+                    pago.setVar_leche(variacionPorcentual(pagoAnterior.getKls_leche(), pago.getKls_leche()));
+                    pago.setVar_grasa(variacionPorcentual(pagoAnterior.getGrasa(), pago.getGrasa()));
+                    pago.setVar_solidos_totales(variacionPorcentual(pagoAnterior.getSolidos_totales(), pago.getSolidos_totales()));
+                }
+                // Si no hay un pago anterior, se deja en 0 las variaciones
+                else{
+                    pago.setVar_leche(0.0);
+                    pago.setVar_grasa(0.0);
+                    pago.setVar_solidos_totales(0.0);
+                }
+                // Se calculan y se hace set de los descuentos
+                pago.setDcto_var_leche(dctoPagoLeche(pago.getVar_leche(), pago.getPago_leche()));
+                pago.setDcto_var_grasa(dctoPagoGrasa(pago.getVar_grasa(), pago.getPago_leche()));
+                pago.setDcto_var_solidos_totales(dctoPagoSolidos(pago.getVar_solidos_totales(), pago.getPago_leche()));
+                // Se calculan y se hace set de la bonificacion por frecuencia
+                Double Bonificacion = Bonificacion(id_proveedor, pago.getPago_leche(), fechaBase);
+                pago.setBonificacion_por_frecuencia(Bonificacion);
+                // Se calcula y se hace set del pago por acopio de leche
+                Double PagoAcopioLeche = pago.getPago_leche() + pago.getPago_grasa() + pago.getPago_solidos_totales() + Bonificacion;
+                // Se calculan y se hace set de los descuentos totales y el pago final
+                Double Descuentos = pago.getDcto_var_grasa() + pago.getDcto_var_leche() + pago.getDcto_var_solidos_totales();
+                Double PagoTotal = PagoAcopioLeche - Descuentos;
+                pago.setPago_total(PagoTotal);
+                // Se calcula y se hace set de la retencion
+                Double Retencion = calcularRetencion(laboratorioService.getRetencionByProveedor(Long.valueOf(id_proveedor)), PagoTotal);
+                pago.setMonto_retencion(Retencion);
+                // Se calcula y se hace set del pago final
+                Double PagoFinal = PagoTotal - Retencion;
+                pago.setMonto_final(PagoFinal);
+            }else{
+                pago.setKls_leche(0);
+                pago.setGrasa(0);
+                pago.setSolidos_totales(0);
+                pago.setNro_dias_envios(0);
+                pago.setProm_diario_kls_leche(0.0);
+                pago.setPago_leche(0);
+                pago.setPago_grasa(0);
+                pago.setPago_solidos_totales(0);
+                pago.setVar_leche(0.0);
+                pago.setVar_grasa(0.0);
+                pago.setVar_solidos_totales(0.0);
+                pago.setDcto_var_leche(0.0);
+                pago.setDcto_var_grasa(0.0);
+                pago.setDcto_var_solidos_totales(0.0);
+                pago.setBonificacion_por_frecuencia(0.0);
+                pago.setPago_total(0.0);
+                pago.setMonto_retencion(0.0);
+                pago.setMonto_final(0.0);
+            }
+            // Se guarda el pago
+            pagosRepository.save(pago);
         }
-        else{
-            fechaBase = LocalDate.of(Integer.parseInt(quincena.split("/")[0]),
-                    Integer.parseInt(quincena.split("/")[1]), 16);
-        }
-        // Se hace Set de los datos que no se calculan
-        pago.setAnio(Integer.parseInt(quincena.split("/")[0]));
-        pago.setMes(Integer.parseInt(quincena.split("/")[1]));
-        pago.setQuincena(Integer.parseInt(quincena.split("/")[2]));
-        pago.setId_proveedor(id_proveedor);
-        pago.setNombre_proveedor(laboratorioService.getNombreByProveedor(Long.valueOf(id_proveedor)));
-        pago.setKls_leche(acopioService.lecheByProveedor(id_proveedor, fechaBase));
-        pago.setGrasa(laboratorioService.porcentajeGrasaByProveedor(Long.valueOf(id_proveedor)));
-        pago.setSolidos_totales(laboratorioService.porcentajeSolidosByProveedor(Long.valueOf(id_proveedor)));
-        // Se hace Set de los datos que se calculan
-        pago.setNro_dias_envios(acopioService.countDaysAcopioByProveedor(id_proveedor, fechaBase));
-        pago.setProm_diario_kls_leche((double) (pago.getKls_leche() / pago.getNro_dias_envios()));
-        pago.setPago_leche(pagoLeche(laboratorioService.getCategoriaByProveedor(Long.valueOf(id_proveedor)), pago.getKls_leche()));
-        pago.setPago_grasa(pagoGrasa(pago.getGrasa(), pago.getKls_leche()));
-        pago.setPago_solidos_totales(pagoSolidos(pago.getSolidos_totales(), pago.getKls_leche()));
-        // Se busca si es que hay un pago anterior para calcular las variaciones
-        PagosEntity pagoAnterior = getPagoAnterior(id_proveedor, quincena);
-        // Si hay un pago anterior, se calculan las variaciones
-        if(pagoAnterior != null){
-            pago.setVar_leche(variacionPorcentual(pagoAnterior.getKls_leche(), pago.getKls_leche()));
-            pago.setVar_grasa(variacionPorcentual(pagoAnterior.getGrasa(), pago.getGrasa()));
-            pago.setVar_solidos_totales(variacionPorcentual(pagoAnterior.getSolidos_totales(), pago.getSolidos_totales()));
-        }
-        // Si no hay un pago anterior, se deja en 0 las variaciones
-        else{
-            pago.setVar_leche(0.0);
-            pago.setVar_grasa(0.0);
-            pago.setVar_solidos_totales(0.0);
-        }
-        // Se calculan y se hace set de los descuentos
-        pago.setDcto_var_leche(dctoPagoLeche(pago.getVar_leche(), pago.getPago_leche()));
-        pago.setDcto_var_grasa(dctoPagoGrasa(pago.getVar_grasa(), pago.getPago_leche()));
-        pago.setDcto_var_solidos_totales(dctoPagoSolidos(pago.getVar_solidos_totales(), pago.getPago_leche()));
-        // Se calculan y se hace set de la bonificacion por frecuencia
-        Double Bonificacion = Bonificacion(id_proveedor, pago.getPago_leche(), fechaBase);
-        pago.setBonificacion_por_frecuencia(Bonificacion);
-        // Se calcula y se hace set del pago por acopio de leche
-        Double PagoAcopioLeche = pago.getPago_leche() + pago.getPago_grasa() + pago.getPago_solidos_totales() + Bonificacion;
-        // Se calculan y se hace set de los descuentos totales y el pago final
-        Double Descuentos = pago.getDcto_var_grasa() + pago.getDcto_var_leche() + pago.getDcto_var_solidos_totales();
-        Double PagoTotal = PagoAcopioLeche - Descuentos;
-        pago.setPago_total(PagoTotal);
-        // Se calcula y se hace set de la retencion
-        Double Retencion = CalcularRetencion(laboratorioService.getRetencionByProveedor(Long.valueOf(id_proveedor)), PagoTotal);
-        pago.setMonto_retencion(Retencion);
-        // Se calcula y se hace set del pago final
-        Double PagoFinal = PagoTotal - Retencion;
-        pago.setMonto_final(PagoFinal);
-        // Se guarda el pago
-        pagosRepository.save(pago);
     }
     public void calcularPagos(){
         ArrayList<String> proveedores = acopioService.getProveedores();
-        for(String proveedor : proveedores){
-            calcularPago(proveedor);
-        }
+        for(String proveedor : proveedores) calcularPago(proveedor, LocalDate.now());
     }
-    public ArrayList<PagosEntity> ObtenerData(){
+    public ArrayList<PagosEntity> obtenerData(){
         return (ArrayList<PagosEntity>) pagosRepository.findAll();
     }
+    public void guardarData(PagosEntity pago){
+        pagosRepository.save(pago);
+    }
+    public void eliminarData(PagosEntity pago){
+        pagosRepository.delete(pago);
+    }
+    public boolean existePago(String id_proveedor, Integer anio, Integer mes, Integer quincena){
+        return pagosRepository.findPagosByQuincena(id_proveedor, anio, mes, quincena) != null;
+    }
+    public PagosEntity getPagoByIdProveedorAndQuincena(String id_proveedor, Integer anio, Integer mes, Integer quincena){
+        return pagosRepository.findPagosByQuincena(id_proveedor, anio, mes, quincena);}
 }
