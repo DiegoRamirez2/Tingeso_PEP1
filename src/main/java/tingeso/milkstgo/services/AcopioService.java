@@ -47,9 +47,14 @@ public class AcopioService {
     @Generated
     public void leerCsv(String direccion) {
         acopioRepository.deleteAll();
+        boolean primeraLineaLeida = false;
         try (BufferedReader bf = new BufferedReader(new FileReader(direccion))) {
             String bfRead;
             while ((bfRead = bf.readLine()) != null) {
+                if (!primeraLineaLeida) {
+                    primeraLineaLeida = true;
+                    continue;
+                }
                 guardarDataDB(bfRead.split(";")[0], bfRead.split(";")[1], bfRead.split(";")[2], bfRead.split(";")[3]);
             }
             logg.info("Archivo leído exitosamente");

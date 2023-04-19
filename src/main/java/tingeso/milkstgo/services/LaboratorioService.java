@@ -72,9 +72,14 @@ public class LaboratorioService {
     @Generated
     public void leerCsv(String direccion){
         laboratorioRepository.deleteAll();
+        boolean primeraLineaLeida = false;
         try(BufferedReader bf = new BufferedReader(new FileReader(direccion))){
             String bfRead;
             while((bfRead = bf.readLine()) != null){
+                if(!primeraLineaLeida){
+                    primeraLineaLeida = true;
+                    continue;
+                }
                 String idProveedor = bfRead.split(";")[0];
                 String grasa = bfRead.split(";")[1];
                 String solidos = bfRead.split(";")[2];
