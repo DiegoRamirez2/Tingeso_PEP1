@@ -16,9 +16,10 @@
 	<properties>
 		<java.version>17</java.version>
 		<sonar.exclusions>
-			src/main/java/Tingeso.MilkStgo/Entities/*,
-			src/main/java/Tingeso.MilkStgo/Repositories/*,
-			src/main/java/Tingeso.MilkStgo/Controllers/*
+			src/main/java/tingeso/milkstgo/entities/*,
+			src/main/java/tingeso/milkstgo/repositories/*,
+			src/main/java/tingeso/milkstgo/controllers/*,
+			src/main/java/tingeso/milkstgo/ProjectTingesoApplication.java
 		</sonar.exclusions>
 	</properties>
 	<dependencies>

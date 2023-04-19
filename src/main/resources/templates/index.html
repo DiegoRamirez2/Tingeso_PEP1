@@ -126,7 +126,7 @@
         </thead>
         <tbody>
         <tr th:each="proveedor:${proveedor}">
-            <td th:text="${proveedor.id_proveedor}"></td>
+            <td th:text="${proveedor.getIdProveedor}"></td>
             <td th:text="${proveedor.nombre}"></td>
             <td th:text="${proveedor.categoria}"></td>
             <td th:text="${proveedor.retencion}"></td>

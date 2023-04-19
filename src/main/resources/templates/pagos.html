@@ -139,11 +139,11 @@
     <tr th:each="pagos:${pagos}">
       <!--/*@thymesVar id="pagos" type=""*/-->
       <td th:text="${pagos.anio+'/'+pagos.mes+'/'+pagos.quincena}"></td>
-      <td th:text="${pagos.id_proveedor}"></td>
-      <td th:text="${pagos.nombre_proveedor}"></td>
-      <td th:text="${pagos.kls_leche}"></td>
-      <td th:text="${pagos.nro_dias_envios}"></td>
-      <td th:text="${pagos.prom_diario_kls_leche}"></td>
+      <td th:text="${pagos.idProveedor}"></td>
+      <td th:text="${pagos.nombreProveedor}"></td>
+      <td th:text="${pagos.klsLeche}"></td>
+      <td th:text="${pagos.nroDiasEnvios}"></td>
+      <td th:text="${pagos.promDiarioKlsLeche}"></td>
       <td th:text="${pagos.var_leche}"></td>
       <td th:text="${pagos.grasa}"></td>
       <td th:text="${pagos.var_grasa}"></td>

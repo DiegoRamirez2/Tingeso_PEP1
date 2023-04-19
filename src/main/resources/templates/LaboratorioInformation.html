@@ -122,9 +122,9 @@
     </thead>
     <tbody>
     <tr th:each="lab:${lab}">
-      <td th:text="${lab.proveedor.getId_proveedor()}"></td>
-      <td th:text="${lab.porcentaje_grasa}"></td>
-      <td th:text="${lab.porcentaje_solidos_totales}"></td>
+      <td th:text="${lab.proveedor.getIdProveedor()}"></td>
+      <td th:text="${lab.PorcentajeGrasa}"></td>
+      <td th:text="${lab.PorcentajeSolidosTotales}"></td>
     </tr>
     </tbody>
   </table>
