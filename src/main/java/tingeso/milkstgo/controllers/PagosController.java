@@ -26,8 +26,10 @@ public class PagosController {
     @GetMapping("/calcularPagos")
     public String calcularPagos(){
         List<String> proveedores = pagosService.getProveedores();
-        for(String proveedor : proveedores){
-            pagosService.calcularPago(proveedor, LocalDate.now());
+        if(proveedores.size() != 0){
+            for(String proveedor : proveedores){
+                pagosService.calcularPago(proveedor, LocalDate.now());
+            }
         }
         return "redirect:/pagos";
     }
