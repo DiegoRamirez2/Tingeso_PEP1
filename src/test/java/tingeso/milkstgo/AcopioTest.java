@@ -67,7 +67,6 @@ class AcopioTest {
                 acopio.setProveedor("1003");
                 acopio.setKlsLeche(45);
                 acopio_list.add(acopio);
-                System.out.println();
                 acopioService.guardarData(acopio);
             }
             assertEquals(10, acopioService.countAcopioSinceFecha(LocalDate.parse("10-03-2023", DateTimeFormatter.ofPattern("dd-MM-yyyy")), "T", "1003"));
@@ -93,12 +92,9 @@ class AcopioTest {
             acopioTarde.setProveedor("1003");
             acopioTarde.setKlsLeche(45);
             acopioService.guardarData(acopioTarde);
-            System.out.println("La fecha de acopio1 es: " + acopioManana.getFecha());
             acopio_list.add(acopioManana);
-            System.out.println("La fecha de acopio2 es: " + acopioTarde.getFecha());
             acopio_list.add(acopioTarde);
         }
-        System.out.println(acopio_list.size());
         assertEquals(15, acopioService.countDaysAcopioByProveedor("1003", LocalDate.parse("10-03-2023", DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
         for(AcopioEntity acopioI : acopio_list) {
             acopioService.eliminarData(acopioI);
