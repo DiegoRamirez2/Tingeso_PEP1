@@ -350,7 +350,7 @@ class PagosTest {
         LaboratorioEntity laboratorioUno = new LaboratorioEntity(500L,5.0, 20.0, proveedorService.findByCodigo(1010L));
         laboratorioService.guardarData(laboratorioUno);
         // Generamos el pago actual
-        pagosService.calcularPago("1010", LocalDate.now());
+        pagosService.calcularPago("1010", LocalDate.now().minusMonths(1));
         PagosEntity pagoActual = pagosService.getPagoByIdProveedorAndQuincena("1010", 2023, 4, 2);
         assertEquals(2023, pagoActual.getAnio());
         assertEquals(0, pagoActual.getBonificacionPorFrecuencia());
@@ -419,7 +419,7 @@ class PagosTest {
         LaboratorioEntity laboratorioUno = new LaboratorioEntity(1L,5.0, 20.0, proveedorService.findByCodigo(1009L));
         laboratorioService.guardarData(laboratorioUno);
         // Generamos el pago actual
-        pagosService.calcularPago("1009", LocalDate.now());
+        pagosService.calcularPago("1009", LocalDate.now().minusMonths(1));
         PagosEntity pagoActual = pagosService.getPagoByIdProveedorAndQuincena("1009", 2023, 4, 2);
         assertEquals(2023, pagoActual.getAnio());
         assertEquals(0, pagoActual.getBonificacionPorFrecuencia());
