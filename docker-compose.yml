@@ -20,7 +20,7 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_PASSWORD: 1234
+      POSTGRES_PASSWORD: diego1234
       POSTGRES_USER: postgres
       POSTGRES_DB: PEP1
   app1:

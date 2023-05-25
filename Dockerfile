@@ -1,4 +1,4 @@
-FROM openjdk:19
+FROM openjdk:17
 ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} MilkStgo-0.0.1-SNAPSHOT.jar
 EXPOSE 8090
